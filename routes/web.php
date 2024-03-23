@@ -1,18 +1,15 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
-use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
+
 
 Route::get('/', function () {
-    $employee = \App\Models\Employee::find(1);
+    $employees = \App\Models\Employee::get();
     $service = \App\Models\Service::find(1);
-   (new \App\Bookings\ScheduleAvailability($employee, $service))
-       ->forPeriod(
-           now()->startOfDay(),
-           now()->addMonth()->endOfDay()
-       );
+    $availability = (new \App\Bookings\ServiceSlotAvailability($employees, $service))
+        ->forPeriod(now()->startOfDay(), now()->addDay()->endOfDay());
+
+    dd($availability);
 });
 
 require __DIR__.'/auth.php';
